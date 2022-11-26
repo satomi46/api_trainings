@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Get Current Position</title>
+    <script type="text/javascript">
+      var watchID;
+      function watchPosition() {
+        if(navigator.geolocation) {
+          // geolocation API is offered by navigator object
+          // check the browser support geolocation API
+          watchID = navigator.geolocation.watchPosition(successPosition, failurePosition, 
+                                                        { enableHighAccuracy: false, timeout: 3000, maximumAge: 4000 });
+        } else 
+          document.getElementById("result").innerHTML = "Your browser does not support Geolocation API !!!"
+      }
+
+      function stopWatching() {
+        clearWatch(watchID);
+      }
+      
+      function successPosition(position) {
+        // position object has two properties, coords, and timestamp
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+
+        document.getElementById("result").innerHTML = "Latitude:" + lat + "<br />Longitude:" + long
+
+      }
+
+      function failurePosition(error) {
+        alert("Error Code: " + error.code + " Error Message: " + error.message);
+      }
+
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="result"></div>
+    <button id="btnStartTrackinga" onclick="watchPosition();">Start Tracking Location</button>
+    <button id="btnStopTrackinga" onclick="stopWatching();">Stop Tracking Location</button>
+  </body>
+</html>
