@@ -1,0 +1,1 @@
+getCurrentPosition(success_callback, error_callback, positionOptions)

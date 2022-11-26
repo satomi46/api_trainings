@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Get Current Position</title>
+    <script type="text/javascript">
+      function getPosition() {
+        if(navigator.geolocation) {
+          // geolocation API is offered by navigator object
+          // check the browser support geolocation API
+          navigator.geolocation.getCurrentPosition(successPosition);
+        } else 
+          document.getElementById("result").innerHTML = "Your browser does not support Geolocation API !!!"
+      }
+      
+      function successPosition(position) {
+        // position object has two properties, coords, and timestamp
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+
+        document.getElementById("result").innerHTML = "Latitude:" + lat + "<br />Longitude:" + long
+
+        alert("Accuracy: " + position.coords.accuracy);
+        alert("Altitude: " + position.coords.altitude);
+        alert("Altitude Accuracy: " + position.coords.altitudeAccuracy);
+        alert("Direction: " + position.coords.heading);
+        alert("speed: " + position.coords.speed);
+        alert("Timestamp: " + position.coords.timestamp);
+
+      }
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="result"></div>
+    <button id="btnPosition" onclick="getPosition();">Get Current Position</button>
+  </body>
+</html>
