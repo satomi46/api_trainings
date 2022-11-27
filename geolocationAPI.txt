@@ -2,3 +2,10 @@ getCurrentPosition(success_callback, error_callback, positionOptions)
 
 watchPosition(success_callback, error_callback, positionOptions)
 clearWatch(id)
+
+# Map Types
+  * Road Map
+  * Satellite
+  * Hybrid
+  * Terrain
+

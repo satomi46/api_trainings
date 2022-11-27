@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript">
+    window.onload = function () {
+      var latitude = 38.897733;
+      var longitude = -77.036531;
+      var latlong = latitude + "," + longitude;
+      //Get API key for Google Static Maps API and use it in the place of YOUR-KEY
+      var mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center="
+                    + latlong + "&zoom=15&size=600x500&maptype=hybrid&key=YOUR-KEY";
+      document.getElementById("staticmap").innerHTML = "<img src='" + mapUrl + "'>";
+    }
+  </script>
+  <title>Static Map</title>
+</head>
+<body>
+  <div id="staticmap" style="width: 600px; height: 500px;"></div>
+</body>
+</html>
