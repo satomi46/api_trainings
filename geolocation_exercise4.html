@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript">
+    window.onload = function () {
+      // var latitude = 35.6864604;
+      // var longitude = 139.7635769;
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onSuccess);
+      } else
+      document.getElementById("result").innerHTML = "Your browser does not support Geolocation API !!!"
+    }
+    function onSuccess(position) {
+      var currentLat = position.coords.latitude;
+      var currentLong = position.coords.longitude;
+      var latlong = currentLat + "," + currentLong;
+      //Get API key for Google Static Maps API and use it in the place of YOUR-KEY
+      var mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center="
+                    + latlong + "&zoom=17&size=500x500&maptype=roadmap&key=API-KEY";
+      document.getElementById("staticmap").innerHTML = "<img src='" + mapUrl + "'>";
+      document.getElementById("result").innerHTML = "Latitude:" + currentLat + "<br />Longitude:" + currentLong
+    }
+  </script>
+  <title>Static Map</title>
+</head>
+<body>
+  <div id="result">a</div>
+  <div id="staticmap" style="width: 500px; height: 500px;"></div>
+</body>
+</html>
