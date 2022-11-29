@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postcode Finder</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API-KEY"></script>
+  <script type="text/javascript">
+    var currentLat, currentLong, display;
+    window.onload = function() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onSuccess, onError,
+                                            {maximumAge: 60*1000,
+                                            timeout: 5*60*1000,
+                                            enableHighAccuracy: true});
+      }
+    }
+    function onSuccess(position) {
+      currentLat = position.coords.latitude;
+      currentLong = position.coords.longitude;
+
+      FindPostCode("initial")
+    }
+
+    function onError(error) {
+      switch(error.code) {
+        case PERMISSION_DENIED:
+          alert("User denied permission")
+          break;
+        case TIMEOUT:
+          alert("Geolocation timed out")
+          break;
+        case POSITION_UNAVAILABLE:
+          alert("Geolocation information is not available")
+          break;
+        default:
+          alert("Unknown error");
+          break;
+      }
+    }
+    function FindPostCode(option) {
+      var geocoder = new google.maps.Geocoder();
+      if (option == "initial"){ // current positionのlatitude, longitudeからpostcodeを取得
+        display = "postcode"
+        var latlng = new google.maps.LatLng(currentLat, currentLong);
+        geocoder.geocode({"location": latlng}, getResult);
+        
+      } else if (option == "requested") { // ユーザーが入力したaddressからpostcodeを取得
+        document.getElementById("code").innerHTML = "";
+        display = "code"
+        var addr = document.getElementById("address").value.replace(" ", "+");
+        geocoder.geocode({"address": addr}, getResult);
+      }
+    }
+    function getResult(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results) {
+          var flag = 0;
+          for(var i=0;i<results[0].address_components.length;i++) {
+            if (results[0].address_components[i].types == "postal_code") {
+              // alert(results[0].address_components[i].long_name);
+              document.getElementById(display).innerHTML = "<b>" + results[0].address_components[i].long_name + "</b>";
+              return
+            } else {
+              flag = 1;
+            }
+          }
+          if (flag == 1) {
+            alert("Enter a more specific address");
+          }
+        }
+      } else
+      alert("Could not get the postcode for the following reason:" + status );
+    }
+  </script>
+</head>
+<body>
+  Your postcode:<span id="postcode"></span><br /><br />
+  <fieldset style="width: 500px;">
+    <legend><b>Postcode Finder</b></legend>
+    Address:<input type="text" id="address" size="40"><br /><br />
+    <button id="btnFind" onclick="FindPostCode('requested');">Find Postcode</button><br /><br />
+    Postcode of the requested address: <span id="code"></span>
+  </fieldset>
+</body>
+</html>
