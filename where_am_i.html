@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Where Am I?</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API-KEY"></script>
+  <script type="text/javascript">
+    var watchId, geocoder, startLat, startLong;
+    var start = 1;
+    window.onload = function() {
+      if (navigator.geolocation) {
+        watchId = navigator.geolocation.watchPosition(onSuccess, onError,
+                                                      {maximumAge: 60*1000,
+                                                      timeout: 5*60*1000,
+                                                      enableHighAccuracy: true});
+      }
+    }
+    function onSuccess(position) {
+      var currentLat = position.coords.latitude;
+      var currentLong = position.coords.longitude;
+
+      if (start == 1) {
+        startLat = currentLat;
+        startLong = currentLong;
+        start = 0;
+      }
+
+      var geocoder = new google.maps.Geocoder(); // Geocoderクラスはリクエストを送信するインスタンスを生成する
+      var latlong = new google.maps.LatLng(currentLat, currentLong);
+      
+      geocoder.geocode({'latLng':latlong}, function(results, status) { // geocodeメソッドは第一引数のリクエストをジオコード化する
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results) {
+            // alert(results[0].formatted_address);
+            document.getElementById("location").innerHTML = "You are now near " + results[0].formatted_address
+          }
+        } else
+          alert("Could not get the geolocation information");
+        });
+
+      var mapOptions = {
+        center: new google.maps.LatLng(startLat, startLong),
+        zoom: 10,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("mapArea"), mapOptions);
+      var marker = new google.maps.Marker({
+        position: latlong,
+        map: map,
+      })
+      document.getElementById("location").innerHTML = currentLat + " " + currentLong;
+    }
+
+    function onError(error) {
+      switch(error.code) {
+        case PERMISSION_DENIED:
+          alert("User denied permission")
+          break;
+        case TIMEOUT:
+          alert("Geolocation timed out")
+          break;
+        case POSITION_UNAVAILABLE:
+          alert("Geolocation information is not available")
+          break;
+        default:
+          alert("Unknown error");
+          break;
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="location"></div>
+  <div id="mapArea" style="height: 500px; width: 500px; background-color: aquamarine;"></div>
+</body>
+</html>
